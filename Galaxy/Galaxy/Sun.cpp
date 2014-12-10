@@ -1,5 +1,5 @@
 #include "Sun.h"
-#include "GL\glut.h"
+#include <GL/glut.h>
 
 Sun::Sun()
 {
@@ -20,7 +20,7 @@ void Sun::render()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
    glEnable(GL_LIGHT0);
 
-   float color[3] = { 1.0, 1.0, 0.8 };
+   float color[3] = { 1, .237, 0 }; //orange
    glColor3f(color[0], color[1], color[2]);
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
    glutSolidSphere(1.0, 50, 50);
