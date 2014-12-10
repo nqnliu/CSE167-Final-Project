@@ -1,15 +1,128 @@
 #include "SkyBox.h"
-#include <stdlib.h>
-#include <iostream>
-#include "GL/glut.h"
 #include "main.h"
+#include <iostream>
+using namespace std;
 
 SkyBox::SkyBox()
 {
 }
 
-void SkyBox::render()
+void SkyBox::render( float size )
 {
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glDisable(GL_LIGHTING);
+
+	glColor3f(1, 1, 1);
+	
+	//front
+	glBindTexture(GL_TEXTURE_2D, textures[4]);
+	//	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	glEnable(GL_TEXTURE_2D);
+	
+	glBegin(GL_QUADS);
+
+	glNormal3f(0, 0, -1);
+	glTexCoord2f(1, 1);
+	glVertex3f(-size/2, -size/2, size/2);
+	glTexCoord2f(1, 0);
+	glVertex3f(-size/2, size/2, size/2);
+	glTexCoord2f(0, 0);
+	glVertex3f(size/2, size/2, size/2);
+	glTexCoord2f(0, 1);
+	glVertex3f(size / 2, -size / 2, size / 2);
+
+	glEnd();
+	
+	//back
+	glBindTexture(GL_TEXTURE_2D, textures[5]);
+	glEnable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	glNormal3f(0, 0, 1);
+	glTexCoord2f(0, 1);
+	glVertex3f(-size / 2, -size / 2, -size / 2);
+	glTexCoord2f(1, 1);
+	glVertex3f(size / 2, -size / 2, -size / 2);
+	glTexCoord2f(1, 0);
+	glVertex3f(size / 2, size / 2, -size / 2);
+	glTexCoord2f(0, 0);
+	glVertex3f(-size / 2, size / 2, -size / 2);
+
+	glEnd();
+	
+	//left
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
+	glEnable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	glNormal3f(1, 0, 0);
+	glTexCoord2f(0, 0);
+	glVertex3f(-size/2, size/2, size/2);
+	glTexCoord2f(0, 1);
+	glVertex3f(-size/2, -size/2, size/2);
+	glTexCoord2f(1, 1);
+	glVertex3f(-size/2, -size/2, -size/2);
+	glTexCoord2f(1, 0);
+	glVertex3f(-size/2, size/2, -size/2);
+
+	glEnd();
+
+	//right
+	glBindTexture(GL_TEXTURE_2D, textures[0]);
+	glEnable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	glNormal3f(-1, 0, 0);
+	glTexCoord2f(0, 1);
+	glVertex3f(size/2, -size/2, -size/2);
+	glTexCoord2f(1, 1);
+	glVertex3f(size/2, -size/2, size/2);
+	glTexCoord2f(1, 0);
+	glVertex3f(size/2, size/2, size/2);
+	glTexCoord2f(0, 0);
+	glVertex3f(size/2, size/2, -size/2);
+
+	glEnd();
+	
+	//top
+	glBindTexture(GL_TEXTURE_2D, textures[3]);
+	glEnable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	glNormal3f(0, -1, 0);
+	glTexCoord2f(1, 0);
+	glVertex3f(size/2, size/2, size/2);
+	glTexCoord2f(0, 0);
+	glVertex3f(-size/2, size/2, size/2);
+	glTexCoord2f(0, 1);
+	glVertex3f(-size/2, size/2, -size/2);
+	glTexCoord2f(1, 1);
+	glVertex3f(size/2, size/2, -size/2);
+
+	glEnd();
+	
+	//bottom
+	glBindTexture(GL_TEXTURE_2D, textures[2]);
+	glEnable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	glNormal3f(0, 1, 0);
+	glTexCoord2f(1, 0);
+	glVertex3f(size/2, -size/2, -size/2);
+	glTexCoord2f(0, 0);
+	glVertex3f(-size/2, -size/2, -size/2);
+	glTexCoord2f(0, 1);
+	glVertex3f(-size/2, -size/2, size/2);
+	glTexCoord2f(1, 1);
+	glVertex3f(size/2, -size/2, size/2);
+
+	glEnd();
+
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glDisable(GL_TEXTURE_2D);
 }
 
 /** Load a ppm file from disk.
@@ -73,62 +186,40 @@ unsigned char* SkyBox::loadPPM(const char* filename, int& width, int& height)
 
 
 // load image file into texture object
-GLuint SkyBox::loadTexture(char * ppmFile, GLenum side_target)
+void SkyBox::loadTexture(GLuint texture, const char* filename)
 {
-   GLuint texture[1];
-   int twidth, theight;   // texture width/height [pixels]
-   unsigned char* tdata;  // texture pixel data
+	int twidth, theight;   // texture width/height [pixels]
+	unsigned char* tdata;  // texture pixel data
 
-   // Load image file
-   tdata = loadPPM(ppmFile, twidth, theight);
-   if (tdata == NULL) return 0;
+	// Load image file
+	tdata = loadPPM(filename, twidth, theight);
+	if (tdata == NULL) return;
 
-   glGenTextures(1, &texture[0]);
-   // Set this texture to be the one we are working with
-   glBindTexture(GL_TEXTURE_2D, texture[0]);
-   // Set bi-linear filtering for both minification and magnification
-   // Make sure no bytes are padded:
-   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	// Set this texture to be the one we are working with
+	glBindTexture(GL_TEXTURE_2D, texture);
 
-   // Select GL_MODULATE to mix texture with polygon color for shading:
-   glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-   // Use bilinear interpolation:
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-   // Generate the texture
-   glTexImage2D(GL_TEXTURE_2D, 0, 3, twidth, theight, 0, GL_RGB, GL_UNSIGNED_BYTE, tdata);
+	// Generate the texture
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, twidth, theight, 0, GL_RGB, GL_UNSIGNED_BYTE, tdata);
 
-   return 0;
 }
 
 void SkyBox::createCubeMap()
 {
-   GLint texLoc;
-   shade->bind();
-   glActiveTexture(GL_TEXTURE1);
-   loadTexture("clouds_front.ppm", GL_TEXTURE_CUBE_MAP_POSITIVE_Z);
-   //glActiveTexture(GL_TEXTURE1);
-   texLoc = glGetUniformLocation(shade->pid, "back");
-   glUniform1i(texLoc, 1);
-   glActiveTexture(GL_TEXTURE2);
-   loadTexture("clouds_back.ppm", GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
-   //glActiveTexture(GL_TEXTURE2);
-   texLoc = glGetUniformLocation(shade->pid, "front");
-   glUniform1i(texLoc, 2);
-   glActiveTexture(GL_TEXTURE3);
-   loadTexture("clouds_left.ppm", GL_TEXTURE_CUBE_MAP_NEGATIVE_X);
-   //glActiveTexture(GL_TEXTURE3);
-   texLoc = glGetUniformLocation(shade->pid, "left");
-   glUniform1i(texLoc, 3);
-   glActiveTexture(GL_TEXTURE4);
-   loadTexture("clouds_right.ppm", GL_TEXTURE_CUBE_MAP_POSITIVE_X);
-   //glActiveTexture(GL_TEXTURE4);
-   texLoc = glGetUniformLocation(shade->pid, "right");
-   glUniform1i(texLoc, 4);
-   glActiveTexture(GL_TEXTURE5);
-   loadTexture("clouds_top.ppm", GL_TEXTURE_CUBE_MAP_POSITIVE_Y);
-   texLoc = glGetUniformLocation(shade->pid, "top");
-   glUniform1i(texLoc, 5);
-   shade->unbind();
+	glEnable(GL_TEXTURE_2D);
+
+	glGenTextures(6, textures);
+	
+	loadTexture(textures[0], "right.ppm");
+	loadTexture(textures[1], "left.ppm");
+	loadTexture(textures[2], "bottom.ppm");
+	loadTexture(textures[3], "top.ppm");
+	loadTexture(textures[4], "front.ppm");
+	loadTexture(textures[5], "back.ppm");
+
+	glDisable(GL_TEXTURE_2D);
 }

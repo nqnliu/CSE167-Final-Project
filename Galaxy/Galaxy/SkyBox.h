@@ -1,15 +1,19 @@
 #ifndef _SKYBOX_H_
 #define _SKYBOX_H_
 
-#include "GL\glut.h"
+#include <Windows.h>
+#include <GL/glut.h>
 
 class SkyBox
 {
+private:
+	GLuint textures[6];
+
 public:
    SkyBox::SkyBox();
-   void render();
+   void render( float size = 100 );
    unsigned char* loadPPM(const char* filename, int& width, int& height);
-   GLuint loadTexture(char * ppmFile, GLenum side_target);
+   void loadTexture(GLuint texture, const char* filename);
    void createCubeMap();
 
 };

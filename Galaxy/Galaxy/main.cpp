@@ -10,19 +10,32 @@
 using namespace std;
 static int window_width = 512, window_height = 512;
 Sun sun = Sun();
+SkyBox skybox;
+
 namespace Globals
 {
 };
+
+void init()
+{
+	skybox.createCubeMap();
+}
 
 void displayCallback()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
    glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
 
+   skybox.render();
    sun.render();
 
    glFlush();
    glutSwapBuffers();
+}
+
+void idleCallback()
+{
+	displayCallback();         // call display routine to show the cube
 }
 
 // Called whenever the window size changes
@@ -109,5 +122,9 @@ int main(int argc, char** argv) {
    glutDisplayFunc(displayCallback);
    glutKeyboardFunc(keyboardCallback);
    glutSpecialFunc(specialKeysCallback);
+   glutIdleFunc(idleCallback);
+
+   init();
+
    glutMainLoop();
 }
