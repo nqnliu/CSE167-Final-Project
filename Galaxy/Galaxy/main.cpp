@@ -10,9 +10,10 @@
 #include <GL/glut.h>
 
 using namespace std;
-static int window_width = 512, window_height = 512;
+
 Sun sun;
 SkyBox skybox;
+BezierCurve camera;
 Planet planet = Planet(1.0, "mars_1k_color.jpg","mars_1k_normal.jpg");
 Planet planet2 = Planet(1.0, "earthmap1k.jpg", "earthbump1k_NRM.jpg");
 
@@ -32,7 +33,10 @@ void displayCallback()
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
    glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
 
+   camera.move(.001);
+
    skybox.render();
+
    glPushMatrix();
    sun.render();
    glTranslatef(5.0, 0.0, 0.0);
@@ -55,10 +59,12 @@ void idleCallback()
 void reshapeCallback(int new_width, int new_height)
 {
    cerr << "Window::reshapeCallback called" << endl;
-   glViewport(0, 0, new_width, new_height);  // set new viewport size
+   window_width = new_width;
+   window_height = new_height;
+   glViewport(0, 0, window_width, window_height);  // set new viewport size
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   gluPerspective(60.0, double(new_width) / (double)new_height, 1.0, 1000.0); // set perspective projection viewing frustum
+   gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 1000.0); // set perspective projection viewing frustum
    glTranslatef(0.0, 0.0, -20.0);
    glMatrixMode(GL_MODELVIEW);
 }

@@ -12,7 +12,7 @@ private:
 
 public:
    SkyBox::SkyBox();
-   void render( float size = 100 );
+   void render( float size = 1000 );
    unsigned char* loadPPM(const char* filename, int& width, int& height);
    void loadTexture(GLuint texture, const char* filename);
    void createCubeMap();
