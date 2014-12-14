@@ -1,5 +1,6 @@
 #include "SkyBox.h"
 #include "main.h"
+#include "SOIL.h"
 #include <iostream>
 using namespace std;
 
@@ -14,7 +15,7 @@ void SkyBox::render( float size )
 	glDisable(GL_LIGHTING);
 
 	glColor3f(1, 1, 1);
-	
+   glActiveTexture(GL_TEXTURE0);
 	//front
 	glBindTexture(GL_TEXTURE_2D, textures[4]);
 	//	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -211,9 +212,8 @@ void SkyBox::loadTexture(GLuint texture, const char* filename)
 void SkyBox::createCubeMap()
 {
 	glEnable(GL_TEXTURE_2D);
+   glActiveTexture(GL_TEXTURE0);
 
-	glGenTextures(6, textures);
-	
 	loadTexture(textures[0], "right.ppm");
 	loadTexture(textures[1], "left.ppm");
 	loadTexture(textures[2], "bottom.ppm");

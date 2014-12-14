@@ -2,6 +2,7 @@
 #define _SKYBOX_H_
 
 #include <Windows.h>
+#include "GLee.h"
 #include <GL/glut.h>
 
 class SkyBox

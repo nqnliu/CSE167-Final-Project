@@ -5,12 +5,16 @@
 #include "main.h"
 
 #include <iostream>
+#include <Windows.h>
+#include "GLee.h"
 #include <GL/glut.h>
 
 using namespace std;
 static int window_width = 512, window_height = 512;
-Sun sun = Sun();
+Sun sun;
 SkyBox skybox;
+Planet planet = Planet(1.0, "mars_1k_color.jpg","mars_1k_normal.jpg");
+Planet planet2 = Planet(1.0, "earthmap1k.jpg", "earthbump1k_NRM.jpg");
 
 namespace Globals
 {
@@ -19,6 +23,8 @@ namespace Globals
 void init()
 {
 	skybox.createCubeMap();
+   planet.setUpShader();
+   planet2.setUpShader();
 }
 
 void displayCallback()
@@ -27,7 +33,14 @@ void displayCallback()
    glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
 
    skybox.render();
+   glPushMatrix();
    sun.render();
+   glTranslatef(5.0, 0.0, 0.0);
+   planet2.render();
+
+   glTranslatef(5.0, 0.0, 0.0);
+   planet.render();
+   glPopMatrix();
 
    glFlush();
    glutSwapBuffers();
@@ -88,26 +101,9 @@ int main(int argc, char** argv) {
 
    float specular[] = { 1.0, 1.0, 1.0, 1.0 };
    float ambient[] = { .5, .5, .5, 1.0 };
-   float position[] = { 0, 5.0, 0.0, 1.0 };	// lightsource position
+   float position[] = { 10.0, 10.0, 20.0, 1.0 };	// lightsource position
    float shininess[] = { 100.0 };
-   float diffuse[] = { 0.0, 0.0, 0.0, 0.0 };
-
-   shininess[0] = 100.0;
-
-   specular[0] = 1.0;
-   specular[1] = 1.0;
-   specular[2] = 1.0;
-   specular[3] = 1.0;
-
-   diffuse[0] = 0.1;
-   diffuse[1] = 0.5;
-   diffuse[2] = 0.8;
-   diffuse[3] = 1.0;
-
-   ambient[0] = .7;
-   ambient[1] = .7;
-   ambient[2] = .7;
-   ambient[3] = 1.0;
+   float diffuse[] = { 0.1, 0.5, 0.8, 1.0 };
 
    //Generate material properties:
 
@@ -124,6 +120,7 @@ int main(int argc, char** argv) {
    glutSpecialFunc(specialKeysCallback);
    glutIdleFunc(idleCallback);
 
+   glEnable(GL_DEPTH_TEST);
    init();
 
    glutMainLoop();

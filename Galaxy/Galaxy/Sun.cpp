@@ -1,16 +1,17 @@
 #include "Sun.h"
-#include <GL/glut.h>
+#include <Windows.h>
+#include "GLee.h"
 
 Sun::Sun()
 {
-
 }
 
 void Sun::render()
 {
+   glPushMatrix();
    float specular[] = { 1.0, 1.0, 1.0, 1.0 };
    float ambient[] = { .5, .5, .5, 1.0 };
-   float position[] = { 0, 0.0, 0.0, 1.0 };	// lightsource position
+   float position[] = { 0, 3, 0.0, 1.0 };	// lightsource position
    float shininess[] = { 100.0 };
    float diffuse[] = { 0.0, 0.0, 0.0, 0.0 };
    // Generate light source:
@@ -24,4 +25,5 @@ void Sun::render()
    glColor3f(color[0], color[1], color[2]);
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
    glutSolidSphere(1.0, 50, 50);
+   glPopMatrix();
 }
