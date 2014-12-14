@@ -9,6 +9,7 @@ private:
 	int K; // # of curves
 	Vector3 *c_points;
 	float T; //[0,K]
+	int status;
 
 public:
 	BezierCurve(int = 2);
@@ -17,6 +18,7 @@ public:
 	void move(float);
 	Vector3 getPosition(float t);
 	void gen_points();
+	void pause();
 };
 
 #endif

@@ -33,7 +33,7 @@ void displayCallback()
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
    glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
 
-   camera.move(.001);
+   camera.move(.0005);
 
    skybox.render();
 
@@ -91,6 +91,11 @@ void keyboardCallback(unsigned char key, int, int)
    {
       glRotatef(10, 0, 1, 0);
       break;
+   }
+   case ' ':
+   {
+	   camera.pause();
+	   break;
    }
    }
 }
