@@ -57,7 +57,7 @@ void Planet::renderGlow(float r, float g, float b)
 	float range;
 	float step;
 
-	range = 1.3;
+	range = 1.1;
 	n = range * 40 - 40;
 	step = .5 / n;
 

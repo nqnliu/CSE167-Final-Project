@@ -53,18 +53,19 @@ void displayCallback()
 
    if (glow_flag)
    {
+	   glPushMatrix();
+	   sun.renderGlow();
+	   glPopMatrix();
+
 	   // glow effect rendering
 	   glPushMatrix();
 	   glTranslatef(5.0, 0.0, 0.0);
-	   planet2.renderGlow(.05, .1, .5);
+	   planet2.renderGlow(.025, .05, .25);
 
 	   glTranslatef(5.0, 0.0, 0.0);
 	   planet.renderGlow(.21, .1, .03);
 	   glPopMatrix();
 
-	   glPushMatrix();
-	   sun.renderGlow();
-	   glPopMatrix();
    }
 
    glFlush();
