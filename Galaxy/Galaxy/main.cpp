@@ -11,6 +11,8 @@
 
 using namespace std;
 
+bool glow_flag = 1;
+
 Sun sun;
 SkyBox skybox;
 BezierCurve camera;
@@ -38,13 +40,32 @@ void displayCallback()
    skybox.render();
 
    glPushMatrix();
-   sun.render();
    glTranslatef(5.0, 0.0, 0.0);
    planet2.render();
 
    glTranslatef(5.0, 0.0, 0.0);
    planet.render();
    glPopMatrix();
+
+   glPushMatrix();
+   sun.render();
+   glPopMatrix();
+
+   if (glow_flag)
+   {
+	   // glow effect rendering
+	   glPushMatrix();
+	   glTranslatef(5.0, 0.0, 0.0);
+	   planet2.renderGlow(.05, .1, .5);
+
+	   glTranslatef(5.0, 0.0, 0.0);
+	   planet.renderGlow(.21, .1, .03);
+	   glPopMatrix();
+
+	   glPushMatrix();
+	   sun.renderGlow();
+	   glPopMatrix();
+   }
 
    glFlush();
    glutSwapBuffers();
@@ -65,7 +86,7 @@ void reshapeCallback(int new_width, int new_height)
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 1000.0); // set perspective projection viewing frustum
-   glTranslatef(0.0, 0.0, -20.0);
+   gluLookAt(0,0,-20, 5.0, 0, 0, 0,1,0);
    glMatrixMode(GL_MODELVIEW);
 }
 
@@ -97,6 +118,11 @@ void keyboardCallback(unsigned char key, int, int)
 	   camera.pause();
 	   break;
    }
+   case 'g':
+   {
+	   glow_flag = !glow_flag;
+	   break;
+   }
    }
 }
 
@@ -114,7 +140,7 @@ int main(int argc, char** argv) {
    float ambient[] = { .5, .5, .5, 1.0 };
    float position[] = { 10.0, 10.0, 20.0, 1.0 };	// lightsource position
    float shininess[] = { 100.0 };
-   float diffuse[] = { 0.1, 0.5, 0.8, 1.0 };
+   float diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
 
    //Generate material properties:
 

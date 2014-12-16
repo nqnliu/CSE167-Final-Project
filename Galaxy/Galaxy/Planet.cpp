@@ -30,6 +30,50 @@ void Planet::render()
    bumpMap->unbind();
 }
 
+void Planet::glow(float s)
+{
+//	lighting->bind();
+
+	glPushMatrix();
+	glColor4f(glowcolor[0], glowcolor[1], glowcolor[2], s);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, glowcolor);
+	glutSolidSphere(1.0, 50, 50);
+	glPopMatrix();
+
+//	lighting->unbind(); 
+}
+
+void Planet::renderGlow(float r, float g, float b)
+{
+	glowcolor[0] = r;
+	glowcolor[1] = g;
+	glowcolor[2] = b;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+	float scaler;
+	int n;
+	float range;
+	float step;
+
+	range = 1.3;
+	n = range * 40 - 40;
+	step = .5 / n;
+
+	for (int i = n; i >= 0; --i)
+	{
+		scaler = range - .026*(float)i;
+
+		glPushMatrix();
+		glScalef(scaler, scaler, scaler);
+		glow(step);
+		glPopMatrix();
+	}
+
+	glDisable(GL_BLEND);
+}
+
 void Planet::setUpShader()
 {
    if (!bumpMap)

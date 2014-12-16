@@ -9,6 +9,7 @@
 class Planet
 {
 public:
+	float glowcolor[3];
    float color[3];
    float size;
    Shader * bumpMap;
@@ -17,9 +18,13 @@ public:
    char * texture_file;
    char * normal_file;
 
-   Planet::Planet(float size, char * texture, char * normal);
+   Planet(float size, char * texture, char * normal);
    void render();
    void setUpShader();
    void mySphere2();
+   void renderGlow(float, float, float);
+
+private:
+   void glow(float);
 };
 #endif

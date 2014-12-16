@@ -9,7 +9,7 @@ BezierCurve::BezierCurve(int k)
 	K = k;
 	c_points = new Vector3[3*k+1];
 	T = 0;
-	status = 1;
+	status = 0;
 
 	gen_points();
 }
@@ -90,7 +90,7 @@ void BezierCurve::move(float s)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 1000.0); // set perspective projection viewing frustum
-	gluLookAt(p.v[0], p.v[1], p.v[2], 0, 0, 0, up.v[0], up.v[1], up.v[2]);
+	gluLookAt(p.v[0], p.v[1], p.v[2], 5.0, 0, 0, up.v[0], up.v[1], up.v[2]);
 	glMatrixMode(GL_MODELVIEW);
 }
 

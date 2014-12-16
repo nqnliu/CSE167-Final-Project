@@ -9,5 +9,9 @@ class Sun
 public:
    Sun::Sun();
    void render();
+   void renderGlow();
+
+private:
+	void glow(float);
 };
 #endif
