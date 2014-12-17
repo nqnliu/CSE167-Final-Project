@@ -1,4 +1,3 @@
-attribute vec3 v_coord;
 attribute vec3 tangento;
 varying vec3 lightv;
 varying vec3 viewv;

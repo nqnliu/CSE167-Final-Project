@@ -1,85 +1,99 @@
 #include "Planet.h"
 #include "SOIL.h"
+#include "main.h"
 #include <stdlib.h>
 #include <iostream>
 #define NUM_DIVS 50
 #define PI 3.14159
-Planet::Planet(float size, char * texture, char * normal)
+Planet::Planet(float size, char * texture, char * normal, float v)
 {
-   //size = ((double)rand() / (RAND_MAX)) * 3 + 1;
    Planet::size = size;
    texture_file = texture;
    normal_file = normal;
+   glowcolor[0] = 1.0;
+   glowcolor[1] = 1.0;
+   glowcolor[2] = 1.0;
+   bump = true;
+   glowFlag = true;
+   orbit_velocity = v;
+}
+
+Planet::Planet()
+{
 }
 
 void Planet::render()
 {
-   bumpMap->bind();
+   if (bumpMap && bump)
+      bumpMap->bind();
+   else
+      textureMap->bind();
+
    glPushMatrix();
-   glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, texture_id);
-   glActiveTexture(GL_TEXTURE1);
-   glBindTexture(GL_TEXTURE_2D, normal_id);
    glColor3f(color[0], color[1], color[2]);
    glRotatef(90, 1, 0, 0);
    glScalef(size, size, size);
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
-   //glutSolidSphere(1.0, 50, 50);
    mySphere2();
+   if (glowFlag)
+      renderGlow(glowcolor[0], glowcolor[1], glowcolor[2]);
    glPopMatrix();
-   bumpMap->unbind();
+
+   if (bumpMap && bump)
+      bumpMap->unbind();
+   else
+      textureMap->unbind();
 }
 
 void Planet::glow(float s)
 {
-//	lighting->bind();
+   //	lighting->bind();
 
-	glPushMatrix();
-	glColor4f(glowcolor[0], glowcolor[1], glowcolor[2], s);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, glowcolor);
-	glutSolidSphere(1.0, 50, 50);
-	glPopMatrix();
+   glPushMatrix();
+   glColor4f(glowcolor[0], glowcolor[1], glowcolor[2], s);
+   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, glowcolor);
+   glutSolidSphere(1.0, 50, 50);
+   glPopMatrix();
 
-//	lighting->unbind(); 
+   //	lighting->unbind();
 }
 
 void Planet::renderGlow(float r, float g, float b)
 {
-	glowcolor[0] = r;
-	glowcolor[1] = g;
-	glowcolor[2] = b;
+   glowcolor[0] = r;
+   glowcolor[1] = g;
+   glowcolor[2] = b;
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-	float scaler;
-	int n;
-	float range;
-	float step;
+   float scaler;
+   int n;
+   float range;
+   float step;
 
-	range = 1.1;
-	n = range * 40 - 40;
-	step = .5 / n;
+   range = 1.1;
+   n = range * 40 - 40;
+   step = .5 / n;
 
-	for (int i = n; i >= 0; --i)
-	{
-		scaler = range - .026*(float)i;
+   for (int i = n; i >= 0; --i)
+   {
+      scaler = range - .026*(float)i;
 
-		glPushMatrix();
-		glScalef(scaler, scaler, scaler);
-		glow(step);
-		glPopMatrix();
-	}
+      glPushMatrix();
+      glScalef(scaler, scaler, scaler);
+      glow(step);
+      glPopMatrix();
+   }
 
-	glDisable(GL_BLEND);
+   glDisable(GL_BLEND);
 }
 
 void Planet::setUpShader()
 {
-   if (!bumpMap)
-      bumpMap = new Shader("bump.vert", "bump.frag", true);
+   textureMap = new Shader("texture.vert", "texture.frag", true);
+   GLint uniformTex0;
 
-   bumpMap->bind();
    glActiveTexture(GL_TEXTURE0);
    texture_id = SOIL_load_OGL_texture
       (
@@ -91,31 +105,46 @@ void Planet::setUpShader()
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
    glBindTexture(GL_TEXTURE_2D, texture_id);
-   GLint uniformTex0 = glGetUniformLocation(bumpMap->pid, "colorMap");
-   glUniform1i(uniformTex0, 0);
 
-   glActiveTexture(GL_TEXTURE1);
-   normal_id = SOIL_load_OGL_texture
-      (
-      normal_file,
-      SOIL_LOAD_AUTO,
-      SOIL_CREATE_NEW_ID,
-      SOIL_FLAG_TEXTURE_REPEATS
-      );
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-   glBindTexture(GL_TEXTURE_2D, normal_id);
-   uniformTex0 = glGetUniformLocation(bumpMap->pid, "normalMap");
-   glUniform1i(uniformTex0, 1);
-   bumpMap->unbind();
+   if (bump) {
+      glActiveTexture(GL_TEXTURE1);
+      normal_id = SOIL_load_OGL_texture
+         (
+         normal_file,
+         SOIL_LOAD_AUTO,
+         SOIL_CREATE_NEW_ID,
+         SOIL_FLAG_TEXTURE_REPEATS
+         );
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      glBindTexture(GL_TEXTURE_2D, normal_id);
+      bumpMap = new Shader("bump.vert", "bump.frag", true);
+      bumpMap->bind();
+      uniformTex0 = glGetUniformLocation(bumpMap->pid, "colorMap");
+      glUniform1i(uniformTex0, 0);
+      uniformTex0 = glGetUniformLocation(bumpMap->pid, "normalMap");
+      glUniform1i(uniformTex0, 1);
+      bumpMap->unbind();
 
+      textureMap->bind();
+      uniformTex0 = glGetUniformLocation(textureMap->pid, "colorMap");
+      glUniform1i(uniformTex0, 0);
+      textureMap->unbind();
+   }
+}
+
+void Planet::setGlow(float r, float g, float b)
+{
+   glowcolor[0] = r;
+   glowcolor[1] = g;
+   glowcolor[2] = b;
 }
 
 // Modified from the glu source code for gluSphere() for a multi-textured unit sphere with normals
 void Planet::mySphere2()
 {
-   bumpMap->bind();
-   GLint uniformTan = glGetAttribLocation(bumpMap->pid, "tangento");
+   GLint uniformTan;
+   if (bumpMap) uniformTan = glGetAttribLocation(bumpMap->pid, "tangento");
    GLint i, j;
    GLfloat sintheta[NUM_DIVS + 1];
    GLfloat costheta[NUM_DIVS + 1];
@@ -129,7 +158,10 @@ void Planet::mySphere2()
    GLfloat x, y, z;
    GLfloat s, t;
    GLfloat tangent[3];
-
+   glActiveTexture(GL_TEXTURE0);
+   glBindTexture(GL_TEXTURE_2D, texture_id);
+   glActiveTexture(GL_TEXTURE1);
+   glBindTexture(GL_TEXTURE_2D, normal_id);
    for (i = 0; i < slices; i++) {
       angle = 2.0 * PI * i / slices;
       sintheta[i] = sin(angle);
@@ -168,8 +200,8 @@ void Planet::mySphere2()
          glNormal3f(x, y, z);
          glMultiTexCoord2f(GL_TEXTURE0, s, t);
          glMultiTexCoord2f(GL_TEXTURE1, s, t);
-            // TODO: Set tangent vector in shader
-         glVertexAttrib3f(uniformTan, tangent[0], tangent[1], tangent[2]);
+         // TODO: Set tangent vector in shader
+         if (bumpMap) glVertexAttrib3f(uniformTan, tangent[0], tangent[1], tangent[2]);
          glVertex3f(x, y, z);
 
          // Compute coordinates
@@ -185,11 +217,10 @@ void Planet::mySphere2()
          glNormal3f(x, y, z);
          glMultiTexCoord2f(GL_TEXTURE0, s, t);
          glMultiTexCoord2f(GL_TEXTURE1, s, t);
-         glVertexAttrib3f(uniformTan, tangent[0], tangent[1], tangent[2]);
+         if (bumpMap) glVertexAttrib3f(uniformTan, tangent[0], tangent[1], tangent[2]);
          // TODO: Set tangent vector in shader
          glVertex3f(x, y, z);
       }
       glEnd();
    }
-   bumpMap->unbind();
 }

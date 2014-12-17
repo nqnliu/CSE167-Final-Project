@@ -3,6 +3,7 @@
 #endif
 
 #include "main.h"
+#include "SolarSystem.h"
 
 #include <iostream>
 #include <Windows.h>
@@ -13,11 +14,9 @@ using namespace std;
 
 bool glow_flag = 1;
 
-Sun sun;
 SkyBox skybox;
 BezierCurve camera;
-Planet planet = Planet(1.0, "mars_1k_color.jpg","mars_1k_normal.jpg");
-Planet planet2 = Planet(1.0, "earthmap1k.jpg", "earthbump1k_NRM.jpg");
+SolarSystem solar;
 
 namespace Globals
 {
@@ -26,19 +25,32 @@ namespace Globals
 void init()
 {
 	skybox.createCubeMap();
-   planet.setUpShader();
-   planet2.setUpShader();
+   solar.setUp();
 }
 
 void displayCallback()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
    glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
-
    camera.move(.0005);
+   
+   float specular2[] = { 0.0, 0.0, 0.0, 1.0 };
+   float ambient2[] = { .5, .5, .5, 1.0 };
+   float position2[] = { 0, 0.0, 0.0, 1.0 };	// lightsource position
+   float shininess2[] = { 1.0 };
+
+   // Generate light source:
+   glLightfv(GL_LIGHT0, GL_POSITION, position2);
+   glLightfv(GL_LIGHT0, GL_AMBIENT, ambient2);
+   glLightfv(GL_LIGHT0, GL_SPECULAR, specular2);
+   GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+   glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+   glEnable(GL_LIGHT0);
 
    skybox.render();
-
+   solar.render();
+   
+   /*
    glPushMatrix();
    glTranslatef(5.0, 0.0, 0.0);
    planet2.render();
@@ -65,8 +77,8 @@ void displayCallback()
 	   glTranslatef(5.0, 0.0, 0.0);
 	   planet.renderGlow(.21, .1, .03);
 	   glPopMatrix();
-
-   }
+      
+   }*/
 
    glFlush();
    glutSwapBuffers();
@@ -86,7 +98,7 @@ void reshapeCallback(int new_width, int new_height)
    glViewport(0, 0, window_width, window_height);  // set new viewport size
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 1000.0); // set perspective projection viewing frustum
+   gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 2000.0); // set perspective projection viewing frustum
    gluLookAt(0,0,-20, 5.0, 0, 0, 0,1,0);
    glMatrixMode(GL_MODELVIEW);
 }
@@ -106,12 +118,24 @@ void keyboardCallback(unsigned char key, int, int)
    }
    case 'y':
    {
+      //GLfloat ptr[16];
+      //glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
+      //glLoadIdentity();
+      //Matrix4 rotate = Matrix4::makeRotate(rot_angle, Vector3(rotAxis.x, rotAxis.y, rotAxis.z));
+      //camera.C = rotate * camera.C;
+      //camera.rotate(rotate);
       glRotatef(-10, 0, 1, 0);
+      //Matrix4 rotate = Matrix4::makeRotateY(-10);
+      //glMultMatrixd(rotate.getPointer());
       break;
    }
    case 'Y':
    {
+      //GLfloat ptr[16];
+      //glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
+      //glLoadIdentity();
       glRotatef(10, 0, 1, 0);
+      //glMultMatrixf(ptr);
       break;
    }
    case ' ':
@@ -122,12 +146,32 @@ void keyboardCallback(unsigned char key, int, int)
    case 'g':
    {
 	   glow_flag = !glow_flag;
+      solar.toggleGlow();
 	   break;
+   }
+   case'b':
+   {
+      solar.toggleBumps();
+      break;
    }
    }
 }
 
 void specialKeysCallback(int key, int x, int y) {
+   switch (key) {
+   case GLUT_KEY_LEFT:
+      glTranslatef(-1, 0, 0);
+      break;
+   case GLUT_KEY_RIGHT:
+      glTranslatef(1, 0, 0);
+      break;
+   case GLUT_KEY_UP:
+      glTranslatef(0, -1, 0);
+      break;
+   case GLUT_KEY_DOWN:
+      glTranslatef(0, 1, 0);
+      break;
+   }
 }
 
 int main(int argc, char** argv) {

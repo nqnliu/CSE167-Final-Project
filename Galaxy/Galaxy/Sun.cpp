@@ -2,11 +2,12 @@
 #include <Windows.h>
 #include "GLee.h"
 
-Sun::Sun()
+Sun::Sun() : Planet(109, "Textures/sunmap.jpg", "Textures/smooth.jpg", 0.0)
 {
+   Planet::bump = false;
 }
 
-void Sun::render()
+/*void Sun::render()
 {
    glPushMatrix();
    float specular[] = { 0.0, 0.0, 0.0, 1.0 };
@@ -21,12 +22,14 @@ void Sun::render()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
    glEnable(GL_LIGHT0);
 
+   glDisable(GL_LIGHTING);
    float color[3] = { .5, 0, 0 }; //red
    glColor3f(color[0], color[1], color[2]);
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
-   glutSolidSphere(1.0, 50, 50);
+   mySphere2();
+   glEnable(GL_LIGHTING);
    glPopMatrix();
-}
+}*/
 
 void Sun::glow(float s)
 {

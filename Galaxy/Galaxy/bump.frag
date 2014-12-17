@@ -20,7 +20,5 @@ void main(void) {
     vec3 normal = vec3(2.0 * bump - 1.0);
     float diffuse = max(dot(normal, Light), 0.0);
     gl_FragColor = diffuse * texColor;
-    //gl_FragColor = dot(Light, normal) * texColor;
-    //gl_FragColor = vec4(Light.xyz, 0);
-    //gl_FragColor = texColor;
+    //gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
