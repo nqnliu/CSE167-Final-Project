@@ -13,5 +13,7 @@ public:
 
    void draw(Matrix4);
    void update(Matrix4);
+   void scale(float);
+   void rotateY(float);
 };
 #endif

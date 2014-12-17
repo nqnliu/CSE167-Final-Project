@@ -32,7 +32,6 @@ void displayCallback()
 {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // clear color and depth buffers
    glMatrixMode(GL_MODELVIEW);  // make sure we're in Modelview mode
-   camera.move(.0005);
    
    float specular2[] = { 0.0, 0.0, 0.0, 1.0 };
    float ambient2[] = { .5, .5, .5, 1.0 };
@@ -47,7 +46,7 @@ void displayCallback()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
    glEnable(GL_LIGHT0);
 
-   skybox.render(2000);
+   skybox.render(4000);
    solar.render();
    
    /*
@@ -86,6 +85,7 @@ void displayCallback()
 
 void idleCallback()
 {
+	camera.move(.0005);
 	displayCallback();         // call display routine to show the cube
 }
 
@@ -98,7 +98,7 @@ void reshapeCallback(int new_width, int new_height)
    glViewport(0, 0, window_width, window_height);  // set new viewport size
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 2000.0); // set perspective projection viewing frustum
+   gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 4000.0); // set perspective projection viewing frustum
    gluLookAt(0,0,-400, 0, 0, 0, 0,1,0);
    //glTranslatef(0, 0, -200);
    glMatrixMode(GL_MODELVIEW);
@@ -109,12 +109,14 @@ void keyboardCallback(unsigned char key, int, int)
    switch (key) {
    case 's':
    {
-      glScalef(.75, .75, .75);
+	   solar.scale(.9);
+	   skybox.scale(.9);
       break;
    }
    case 'S':
    {
-      glScalef(1.25, 1.25, 1.25);
+	   solar.scale(1.1);
+	   skybox.scale(1.1);
       break;
    }
    case 'y':
@@ -125,9 +127,12 @@ void keyboardCallback(unsigned char key, int, int)
       //Matrix4 rotate = Matrix4::makeRotate(rot_angle, Vector3(rotAxis.x, rotAxis.y, rotAxis.z));
       //camera.C = rotate * camera.C;
       //camera.rotate(rotate);
-      glRotatef(-10, 0, 1, 0);
+      //glRotatef(-10, 0, 1, 0);
       //Matrix4 rotate = Matrix4::makeRotateY(-10);
       //glMultMatrixd(rotate.getPointer());
+
+	   solar.rotateY(-10);
+	   skybox.rotateY(-10);
       break;
    }
    case 'Y':
@@ -135,8 +140,11 @@ void keyboardCallback(unsigned char key, int, int)
       //GLfloat ptr[16];
       //glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
       //glLoadIdentity();
-      glRotatef(10, 0, 1, 0);
+      //glRotatef(10, 0, 1, 0);
       //glMultMatrixf(ptr);
+
+	   solar.rotateY(10);
+	   skybox.rotateY(10);
       break;
    }
    case ' ':
@@ -161,22 +169,54 @@ void keyboardCallback(unsigned char key, int, int)
       gluLookAt(0, 400, -200, 0, 0, -200, 0, 0, 1);
       break;
    }
+   case 39: // '
+   {
+	   solar.translate(10, 0, 0);
+	   skybox.translate(10, 0, 0);
+	   break;
+   }
+   case 59: // ;
+   {
+	   solar.translate(-10, 0, 0);
+	   skybox.translate(-10, 0, 0);
+	   break;
+   }
+   case '[': 
+   {
+	   solar.translate(0, -10, 0);
+	   skybox.translate(0, -10, 0);
+	   break;
+   }
+   case '/': 
+   {
+	   solar.translate(0, 10, 0);
+	   skybox.translate(0, 10, 0);
+	   break;
+   }
    }
 }
 
 void specialKeysCallback(int key, int x, int y) {
    switch (key) {
    case GLUT_KEY_LEFT:
-      glTranslatef(-1, 0, 0);
+	   glMatrixMode(GL_PROJECTION);
+	   glTranslatef(-10, 0, 0);
+	  glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_RIGHT:
-      glTranslatef(1, 0, 0);
+	   glMatrixMode(GL_PROJECTION);
+	   glTranslatef(10, 0, 0);
+	   glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_UP:
-      glTranslatef(0, -1, 0);
+	   glMatrixMode(GL_PROJECTION);
+	   glTranslatef(0, 0, -10);
+	   glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_DOWN:
-      glTranslatef(0, 1, 0);
+	   glMatrixMode(GL_PROJECTION);
+	   glTranslatef(0, 0, 10);
+	   glMatrixMode(GL_MODELVIEW);
       break;
    }
 }

@@ -6,10 +6,17 @@ using namespace std;
 
 SkyBox::SkyBox()
 {
+	M.identity();
 }
 
 void SkyBox::render( float size )
 {
+	glPushMatrix();
+	Matrix4 newm;
+	newm = M;
+	newm.transpose();
+	glLoadMatrixd(newm.getPointer());
+
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 	glDisable(GL_LIGHTING);
@@ -124,6 +131,8 @@ void SkyBox::render( float size )
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glDisable(GL_TEXTURE_2D);
+
+	glPopMatrix();
 }
 
 /** Load a ppm file from disk.
@@ -222,4 +231,29 @@ void SkyBox::createCubeMap()
 	loadTexture(textures[5], "back.ppm");
 
 	glDisable(GL_TEXTURE_2D);
+}
+
+
+void SkyBox::scale(float s)
+{
+	Matrix4 scale;
+
+	scale = scale.makeScale(s, s, s);
+	M = M * scale;
+}
+
+void SkyBox::rotateY(float deg)
+{
+	Matrix4 rotate;
+
+	rotate = rotate.makeRotateY(deg);
+	M = M * rotate;
+}
+
+void SkyBox::translate(float tx, float ty, float tz)
+{
+	Matrix4 t;
+
+	t = t.makeTranslate(tx, ty, tz);
+	M = t * M;
 }

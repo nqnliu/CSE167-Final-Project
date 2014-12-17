@@ -9,6 +9,7 @@ public:
    vector<Planet*> planets;
    vector<MatrixTransform*> translates;
    vector<MatrixTransform*> orbits;
+   Matrix4 model2world;
 
    SolarSystem::SolarSystem();
    void render();
@@ -16,4 +17,7 @@ public:
    void toggleBumps();
    void toggleGlow();
    void update();
+   void scale(float);
+   void rotateY(float);
+   void translate(float, float, float);
 };

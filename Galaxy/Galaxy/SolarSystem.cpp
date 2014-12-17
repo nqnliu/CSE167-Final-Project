@@ -5,6 +5,7 @@
 
 SolarSystem::SolarSystem()
 {
+	model2world.identity();
    planets = vector<Planet*>();
    translates = vector<MatrixTransform*>();
    orbits = vector<MatrixTransform*>();
@@ -77,9 +78,9 @@ void SolarSystem::render()
    update();
    GLfloat ptr[16];
    glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
-   Matrix4 model2world = Matrix4(ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5], ptr[6], ptr[7], 
-      ptr[8], ptr[9], ptr[10], ptr[11], ptr[12], ptr[13], ptr[14], ptr[15]);
-   model2world.transpose();
+//   Matrix4 M = Matrix4(ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5], ptr[6], ptr[7], 
+//      ptr[8], ptr[9], ptr[10], ptr[11], ptr[12], ptr[13], ptr[14], ptr[15]);
+ //  M.transpose();
    //model2world.identity();
    world.draw(model2world);
    glPopMatrix();
@@ -103,4 +104,28 @@ void SolarSystem::update()
       Matrix4 rotate = Matrix4::makeRotateY(planets[i]->orbit_velocity * .1);
       orbits[i]->M = rotate * orbits[i]->M;
    }
+}
+
+void SolarSystem::scale(float s)
+{
+	Matrix4 scale;
+
+	scale = scale.makeScale(s, s, s);
+	model2world =  scale * model2world;
+}
+
+void SolarSystem::rotateY(float deg)
+{
+	Matrix4 rotate;
+
+	rotate = rotate.makeRotateY(deg);
+	model2world = model2world * rotate;
+}
+
+void SolarSystem::translate(float tx, float ty, float tz)
+{
+	Matrix4 t;
+
+	t = t.makeTranslate(tx, ty, tz);
+	model2world = t * model2world;
 }
