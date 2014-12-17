@@ -11,8 +11,8 @@ Planet::Planet(float size, char * texture, char * normal, float v)
    texture_file = texture;
    normal_file = normal;
    glowcolor[0] = 1.0;
-   glowcolor[1] = 1.0;
-   glowcolor[2] = 1.0;
+   glowcolor[1] = 0;
+   glowcolor[2] = 0;
    bump = true;
    glowFlag = true;
    orbit_velocity = v;

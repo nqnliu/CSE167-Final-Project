@@ -15,42 +15,30 @@ SolarSystem::SolarSystem()
    //Sun sun = Sun();
    //world.addChild(&sun);
 
-   Matrix4 rotate = Matrix4::makeRotateY(20);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(40);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(60);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(80);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(100);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(120);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(140);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(160);
-   orbits.push_back(new MatrixTransform(rotate));
-   //rotate = Matrix4::makeRotateY(180);
-   orbits.push_back(new MatrixTransform(rotate));
+   Matrix4 rotate = Matrix4();
+   rotate.identity();
+   for (int i = 0; i < 9; i++)
+   {
+      orbits.push_back(new MatrixTransform(rotate));
+   }
 
    Matrix4 translate = Matrix4::makeTranslate(100, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(140, 0, 0);
-   translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(160, 0, 0);
-   translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(180, 0, 0);
-   translates.push_back(new MatrixTransform(translate));
    translate = Matrix4::makeTranslate(200, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(240, 0, 0);
+   translate = Matrix4::makeTranslate(300, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(270, 0, 0);
+   translate = Matrix4::makeTranslate(400, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(290, 0, 0);
+   translate = Matrix4::makeTranslate(500, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(310, 0, 0);
+   translate = Matrix4::makeTranslate(600, 0, 0);
+   translates.push_back(new MatrixTransform(translate));
+   translate = Matrix4::makeTranslate(700, 0, 0);
+   translates.push_back(new MatrixTransform(translate));
+   translate = Matrix4::makeTranslate(800, 0, 0);
+   translates.push_back(new MatrixTransform(translate));
+   translate = Matrix4::makeTranslate(900, 0, 0);
    translates.push_back(new MatrixTransform(translate));
 
    planets.push_back(new Planet(.50, "Textures/mercurymap.jpg", "Textures/mercurybump_NRM.jpg", 1.59));

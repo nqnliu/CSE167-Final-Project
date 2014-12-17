@@ -9,7 +9,7 @@ class Sun : public Planet
 {
 public:
    Sun::Sun();
-   //void render();
+   void render();
    void renderGlow();
 
 private:

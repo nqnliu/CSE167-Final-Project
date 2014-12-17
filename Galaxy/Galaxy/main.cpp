@@ -47,7 +47,7 @@ void displayCallback()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
    glEnable(GL_LIGHT0);
 
-   skybox.render();
+   skybox.render(2000);
    solar.render();
    
    /*
@@ -99,7 +99,8 @@ void reshapeCallback(int new_width, int new_height)
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 2000.0); // set perspective projection viewing frustum
-   gluLookAt(0,0,-20, 5.0, 0, 0, 0,1,0);
+   gluLookAt(0,0,-400, 0, 0, 0, 0,1,0);
+   //glTranslatef(0, 0, -200);
    glMatrixMode(GL_MODELVIEW);
 }
 
@@ -149,9 +150,15 @@ void keyboardCallback(unsigned char key, int, int)
       solar.toggleGlow();
 	   break;
    }
-   case'b':
+   case 'b':
    {
       solar.toggleBumps();
+      break;
+   }
+   case 'p':
+   {
+      glLoadIdentity();
+      gluLookAt(0, 400, -200, 0, 0, -200, 0, 0, 1);
       break;
    }
    }
