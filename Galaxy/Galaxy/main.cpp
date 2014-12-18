@@ -80,6 +80,7 @@ void reshapeCallback(int new_width, int new_height)
    cerr << "Window::reshapeCallback called" << endl;
    window_width = new_width;
    window_height = new_height;
+   camera.setwh(window_width, window_height);
    glViewport(0, 0, window_width, window_height);  // set new viewport size
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();

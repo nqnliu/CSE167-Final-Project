@@ -11,6 +11,7 @@ private:
 	Vector3 *l_points;
 	float T; //[0,K]
 	int status;
+	int width, height;
 
 public:
 	BezierCurve();
@@ -21,6 +22,7 @@ public:
 	Vector3 getLookAt(float t);
 	void gen_points();
 	void pause();
+	void setwh(int,int);
 };
 
 #endif
