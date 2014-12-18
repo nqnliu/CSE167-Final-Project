@@ -40,8 +40,8 @@ void Planet::render()
       bumpMap->unbind();
    else
 	   textureMap->unbind();
-   if (glowFlag)
-	   renderGlow(1,1,1);
+ //  if (glowFlag)
+	//   renderGlow(1,1,1);
    glPopMatrix();
 }
 

@@ -9,6 +9,7 @@ class ShootingStar
 private:
 	Object *stars;
 	Matrix4 model2world;
+	bool render_flag;
 
 public:
 	ShootingStar();
@@ -18,6 +19,7 @@ public:
 	void render();
 	void shoot();
 	void t(float, float, float);
+	void renderflag(bool);
 };
 
 #endif

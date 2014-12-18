@@ -4,10 +4,12 @@
 const float PI = 3.1415926535898;
 
 // 3k+1 control points
-BezierCurve::BezierCurve(int k)
+BezierCurve::BezierCurve()
 {
+	int k = 3;
 	K = k;
-	c_points = new Vector3[3*k+1];
+	c_points = new Vector3[3 * k + 1];
+	l_points = new Vector3[3 * k + 1];
 	T = 0;
 	status = 0;
 
@@ -16,19 +18,49 @@ BezierCurve::BezierCurve(int k)
 
 void BezierCurve::gen_points()
 {
-	c_points[0] = Vector3(0, 300, -400);
-	c_points[1] = Vector3(400, 300, -400);
-	c_points[2] = Vector3(400, 300, 400);
-	c_points[3] = Vector3(0, 3, 400);
-	c_points[4] = Vector3(-400, 300, 400);
-	c_points[5] = Vector3(-400, 300, -400);
-	c_points[6] = Vector3(0, 300, -400);
+	/* camera center */
+	c_points[0] = Vector3(0, 100, -400);
+
+	c_points[1] = Vector3(300, 10, -200);
+	c_points[2] = Vector3(400, -50, -50);
+	
+	c_points[3] = Vector3(200, 0, 0);
+
+	c_points[4] = Vector3(100, 50, 50);
+	c_points[5] = Vector3(10, 50, 100);
+
+	c_points[6] = Vector3(0, 60, 200);
+
+	c_points[7] = Vector3(-100, 70, 300);
+	c_points[8] = Vector3(-200, 100, -400);
+
+	c_points[9] = c_points[0];
+
+	/* look at */
+	l_points[0] = Vector3(0, 0, 0);
+
+	l_points[1] = Vector3(400, 0,0);
+	l_points[2] = Vector3(500,0, 0);
+
+	l_points[3] = Vector3(500, 0, 0);
+
+	l_points[4] = Vector3(500, 0, 0);
+	l_points[5] = Vector3(000, 0, 0);
+
+	l_points[6] = Vector3(0, 0, 0);
+
+	l_points[7] = Vector3(0, 0, 0);
+	l_points[8] = Vector3(0, 0, 0);
+
+	l_points[9] = l_points[0];
+
 	printf("finish init\n");
 }
 
 BezierCurve::~BezierCurve()
 {
 	delete[]c_points;
+	delete[]l_points;
 }
 
 Vector3 BezierCurve::bez
@@ -61,17 +93,30 @@ Vector3 BezierCurve::bez
 	return newv;
 }
 
-Vector3 BezierCurve::getPosition (float t)
+Vector3 BezierCurve::getPosition(float t)
 {
 	if (t >= K)
 	{
-		t = t - ((int) t/K) * K;
+		t = t - ((int)t / K) * K;
 	}
 
 	int i;
 	i = t;
 
-	return bez(t-(float)i, c_points[i*3], c_points[i*3+1], c_points[i*3+2], c_points[i*3+3]);
+	return bez(t - (float)i, c_points[i * 3], c_points[i * 3 + 1], c_points[i * 3 + 2], c_points[i * 3 + 3]);
+}
+
+Vector3 BezierCurve::getLookAt(float t)
+{
+	if (t >= K)
+	{
+		t = t - ((int)t / K) * K;
+	}
+
+	int i;
+	i = t;
+
+	return bez(t - (float)i, l_points[i * 3], l_points[i * 3 + 1], l_points[i * 3 + 2], l_points[i * 3 + 3]);
 }
 
 void BezierCurve::move(float s)
@@ -80,17 +125,22 @@ void BezierCurve::move(float s)
 //	printf("new case:\n");
 
 	T += s;
-	if (T >= K) T -= K;
+	if (T >= K) 
+	{
+		status = 0; 
+		T -= K;
+	}
 
-	Vector3 p, up;
+	Vector3 p, e, up;
 
 	p = getPosition(T);
+	e = getLookAt(T);
 	up = Vector3(0,1,0);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 4000.0); // set perspective projection viewing frustum
-	gluLookAt(p.v[0], p.v[1], p.v[2], 0.0, 0, 0, up.v[0], up.v[1], up.v[2]);
+	gluLookAt(p.v[0], p.v[1], p.v[2], e.v[0], e.v[1], e.v[2], up.v[0], up.v[1], up.v[2]);
 	glMatrixMode(GL_MODELVIEW);
 }
 

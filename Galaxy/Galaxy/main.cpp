@@ -70,7 +70,7 @@ void displayCallback()
 
 void idleCallback()
 {
-	camera.move(.0005);
+	camera.move(.005);
 	displayCallback();         // call display routine to show the cube
 }
 
@@ -84,48 +84,52 @@ void reshapeCallback(int new_width, int new_height)
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
    gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 4000.0); // set perspective projection viewing frustum
-   gluLookAt(0,0,-400, 0, 0, 0, 0,1,0);
+   gluLookAt(0,100,-400, 0, 0, 0, 0,1,0);
    //glTranslatef(0, 0, -400);
    glMatrixMode(GL_MODELVIEW);
 }
 
 void keyboardCallback(unsigned char key, int, int)
 {
-   switch (key) {
-   case 's':
-   {
-	   solar->scale(.9);
-	   skybox.scale(.9);
-	   if (shootingstar != NULL)
-		shootingstar->scale(.9);
-      break;
-   }
-   case 'S':
-   {
-	   solar->scale(1.1);
-	   skybox.scale(1.1);
-	   if (shootingstar != NULL)
-		shootingstar->scale(1.1);
-      break;
-   }
-   case 'y':
-   {
-	   solar->rotateY(-10);
-	   skybox.rotateY(-10);
-	   break;
-   }
-   case 'Y':
-   {
-	   solar->rotateY(10);
-	   skybox.rotateY(10);
-	   break;
-   }
-   case ' ':
-   {
-	   camera.pause();
-      solar->moving = !solar->moving;
-	   break;
-   }
+	switch (key) {
+	case 's':
+	{
+		solar->scale(.9);
+		skybox.scale(.9);
+		if (shootingstar != NULL)
+			shootingstar->scale(.9);
+		break;
+	}
+	case 'S':
+	{
+		solar->scale(1.1);
+		skybox.scale(1.1);
+		if (shootingstar != NULL)
+			shootingstar->scale(1.1);
+		break;
+	}
+	case 'y':
+	{
+		solar->rotateY(-10);
+		skybox.rotateY(-10);
+		break;
+	}
+	case 'Y':
+	{
+		solar->rotateY(10);
+		skybox.rotateY(10);
+		break;
+	}
+	case ' ':
+	{
+		solar->moving = !solar->moving;
+		break;
+	}
+	case 'B':
+	{
+		camera.pause();
+		break;
+	}
    case 'g':
    {
 	   glow_flag = !glow_flag;
@@ -169,15 +173,15 @@ void keyboardCallback(unsigned char key, int, int)
    }
    case 'v':
    {
-	   if (shootingstar != NULL) delete shootingstar;
-	   shootingstar = new ShootingStar();
+	   if (shootingstar == NULL) 
+			shootingstar = new ShootingStar();
+	   shootingstar->renderflag(1);
 	   shootingstar->shoot();
 	   break;
    }
    case 'V':
    {
-	   delete shootingstar;
-	   shootingstar = NULL;
+	   shootingstar->renderflag(0);
 	   break;
    }
    }
