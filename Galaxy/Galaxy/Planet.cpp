@@ -35,14 +35,14 @@ void Planet::render()
    glScalef(size, size, size);
    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
    mySphere2();
-   if (glowFlag)
-      renderGlow(glowcolor[0], glowcolor[1], glowcolor[2]);
-   glPopMatrix();
 
    if (bumpMap && bump)
       bumpMap->unbind();
    else
-      textureMap->unbind();
+	   textureMap->unbind();
+   if (glowFlag)
+	   renderGlow(1,1,1);
+   glPopMatrix();
 }
 
 void Planet::glow(float s)
@@ -74,7 +74,7 @@ void Planet::renderGlow(float r, float g, float b)
 
    range = 1.1;
    n = range * 40 - 40;
-   step = .5 / n;
+   step = .3 / n;
 
    for (int i = n; i >= 0; --i)
    {
