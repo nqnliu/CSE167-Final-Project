@@ -1,6 +1,7 @@
 #include "SolarSystem.h"
 #include "Planet.h"
 #include "Sun.h"
+#include "Earth.h"
 #include "Matrix4.h"
 
 SolarSystem::SolarSystem()
@@ -44,7 +45,7 @@ SolarSystem::SolarSystem()
 
    planets.push_back(new Planet(.50, "Textures/mercurymap.jpg", "Textures/mercurybump_NRM.jpg", 1.59));
    planets.push_back(new Planet(1.0, "Textures/venusmap.jpg", "Textures/venusbump_NRM.jpg", 1.18));
-   planets.push_back(new Planet(1.0, "Textures/earthmap1k.jpg", "Textures/earthbump1k_NRM.jpg", 1));
+   planets.push_back(new Earth(1.0, "Textures/earthmap1k.jpg", "Textures/earthbump1k_NRM.jpg", 1));
    planets[2]->setGlow(.21, .1, .03);
    planets.push_back(new Planet(.75, "Textures/mars_1k_color.jpg", "Textures/marsbump1k_NRM.jpg", .0343));
    planets[3]->setGlow(.025, .05, .25);

@@ -11,12 +11,12 @@ out vec4 outColor;
  
 void main() 
 {
-    vec4 eyePos = gl_ModelViewMatrix * gl_Vertex;
-    gl_Position = gl_ProjectionMatrix * eyePos;
+   vec4 eyePos = gl_ModelViewMatrix * gl_Vertex;
+   gl_Position = gl_ProjectionMatrix * eyePos;
  
-	outColor = vColor;
+	outColor = gl_Color;
 	
 	float dist = length(eyePos.xyz);
 	float att = inversesqrt(0.1f*dist);
-	gl_PointSize = 20.0f * att;
+	gl_PointSize = 0.5f / att;
 }

@@ -63,8 +63,6 @@ SpaceShip::SpaceShip()
 
 void SpaceShip::render()
 {
-   if (!partShader)
-      partShader = new Shader("particle.vert", "particle.frag", true);
    //glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(Vector3), &positions[0], GL_STATIC_DRAW);
    glPushMatrix();
    //glDisable(GL_DEPTH_TEST);

@@ -26,7 +26,7 @@ public:
    Planet();
    Planet(float, char *, char *, float);
    void render();
-   void setUpShader();
+   virtual void setUpShader();
    void mySphere2();
    void renderGlow(float, float, float);
    void setGlow(float, float, float);

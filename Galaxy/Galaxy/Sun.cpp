@@ -34,15 +34,15 @@ Sun::Sun() : Planet(109, "Textures/sunmap.jpg", "Textures/smooth.jpg", 0.0)
       particleEmitter->addGenerator(posGenerator);
 
       auto colGenerator = std::make_shared<generators::BasicColorGen>();
-      colGenerator->m_minStartCol = glm::vec4{ 1, 0.0, 0.0, 1.0 };
-      colGenerator->m_maxStartCol = glm::vec4{ 1, 0.854902, 0.72549, 1.0 };
-      colGenerator->m_minEndCol = glm::vec4{ 1, 0.854902, 0.72549, 0.0 };
-      colGenerator->m_maxEndCol = glm::vec4{ 0.956863, 0.643137, 0.376471, 0.0 };
+      colGenerator->m_minStartCol = glm::vec4{ 1, 1.0, 1.0, 1.0 };
+      colGenerator->m_maxStartCol = glm::vec4{ 1, 1.0, 1.0, 1.0 };
+      colGenerator->m_minEndCol = glm::vec4{ 1, 1.0, 1.0, 0.0 };
+      colGenerator->m_maxEndCol = glm::vec4{ 1, 1.0, 1.0, 0.0 };
       particleEmitter->addGenerator(colGenerator);
 
       auto velGenerator = std::make_shared<generators::BasicVelGen>();
-      velGenerator->m_minStartVel = glm::vec4{ 0.0f, 0.0f, 0.15f, 0.0f };
-      velGenerator->m_maxStartVel = glm::vec4{ 0.0f, 0.0f, 0.45f, 0.0f };
+      velGenerator->m_minStartVel = glm::vec4{ 0.0f, 0.15f, 0.0f, 0.0f };
+      velGenerator->m_maxStartVel = glm::vec4{ 0.0f, 0.45f, 0.0f, 0.0f };
       particleEmitter->addGenerator(velGenerator);
 
       auto timeGenerator = std::make_shared<generators::BasicTimeGen>();
@@ -56,6 +56,9 @@ Sun::Sun() : Planet(109, "Textures/sunmap.jpg", "Textures/smooth.jpg", 0.0)
 
 void Sun::render()
 {
+   if (!partShader)
+      partShader = new Shader("particle.vert", "particle.frag", true);
+
    float specular2[] = { 1.0, 1.0, 1.0, 1.0 };
    float ambient2[] = { .5, .5, .5, 1.0 };
    float position2[] = { 0, 0.0, 0.0, 1.0 };	// lightsource position
@@ -68,7 +71,7 @@ void Sun::render()
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
    glEnable(GL_LIGHT0);
 
-    textureMap->bind();
+
    m_system->update(.01);
    renderP->update();
    glPushMatrix();
@@ -76,14 +79,15 @@ void Sun::render()
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
    //glLoadIdentity();
-   //partShader->bind();
+   partShader->bind();
    glPointSize(2);
    glScalef(111, 111, 111);
    renderP->render();
    glDisable(GL_BLEND);
-   //partShader->unbind();
+   partShader->unbind();
    glPopMatrix();
 
+   textureMap->bind();
    glPushMatrix();
    //glColor3f(color[0], color[1], color[2]);
    glRotatef(90, 1, 0, 0);

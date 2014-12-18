@@ -8,6 +8,8 @@
 class Sun : public Planet
 {
 public:
+   Shader * partShader;
+
    Sun::Sun();
    void render();
    void renderGlow();
