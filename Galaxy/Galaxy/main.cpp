@@ -24,6 +24,8 @@ SkyBox skybox;
 BezierCurve camera;
 SolarSystem * solar;
 SpaceShip * spaceShip;
+ShootingStar *shootingstar;
+
 namespace Globals
 {
 };
@@ -55,19 +57,12 @@ void displayCallback()
    glEnable(GL_LIGHT0);*/
    glEnable(GL_COLOR_MATERIAL);
    glEnable(GL_NORMALIZE);
+
    skybox.render(4000);
-   spaceShip->render();
+   //spaceShip->render();
    solar->render();
-
-
-   glPushMatrix();
-   //gpuRender.begin();
-   // << our render() method
-   //gpuRender.end();
-   glPopMatrix();
-   //glDisable(GL_BLEND);
-
-   //partShader->unbind();
+   if (shootingstar != NULL)
+	shootingstar->render();
 
    glFlush();
    glutSwapBuffers();
@@ -101,25 +96,29 @@ void keyboardCallback(unsigned char key, int, int)
    {
 	   solar->scale(.9);
 	   skybox.scale(.9);
+	   if (shootingstar != NULL)
+		shootingstar->scale(.9);
       break;
    }
    case 'S':
    {
 	   solar->scale(1.1);
 	   skybox.scale(1.1);
+	   if (shootingstar != NULL)
+		shootingstar->scale(1.1);
       break;
    }
    case 'y':
    {
 	   solar->rotateY(-10);
 	   skybox.rotateY(-10);
-      break;
+	   break;
    }
    case 'Y':
    {
 	   solar->rotateY(10);
 	   skybox.rotateY(10);
-      break;
+	   break;
    }
    case ' ':
    {
@@ -141,7 +140,7 @@ void keyboardCallback(unsigned char key, int, int)
    case 'p':
    {
       glLoadIdentity();
-      gluLookAt(0, 400, -200, 0, 0, -200, 0, 0, 1);
+      gluLookAt(0, 0, -200, 0, 0, -200, 0, 0, 1);
       break;
    }
    case 39: // '
@@ -168,6 +167,19 @@ void keyboardCallback(unsigned char key, int, int)
 	   skybox.translate(0, 2, 0);
 	   break;
    }
+   case 'v':
+   {
+	   if (shootingstar != NULL) delete shootingstar;
+	   shootingstar = new ShootingStar();
+	   shootingstar->shoot();
+	   break;
+   }
+   case 'V':
+   {
+	   delete shootingstar;
+	   shootingstar = NULL;
+	   break;
+   }
    }
 }
 
@@ -177,12 +189,14 @@ void specialKeysCallback(int key, int x, int y) {
 	   glMatrixMode(GL_PROJECTION);
 	   glTranslatef(-2, 0, 0);
       spaceShip->translate(2, 0, 0);
+	   //glRotatef(4, 0, 1, 0);
 	  glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_RIGHT:
 	   glMatrixMode(GL_PROJECTION);
 	   glTranslatef(2, 0, 0);
       spaceShip->translate(-2, 0, 0);
+	   //glRotatef(-4,0,1,0);
 	   glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_UP:
