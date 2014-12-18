@@ -23,23 +23,23 @@ SolarSystem::SolarSystem()
       orbits.push_back(new MatrixTransform(rotate));
    }
 
-   Matrix4 translate = Matrix4::makeTranslate(100, 0, 0);
+   Matrix4 translate = Matrix4::makeTranslate(150, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(200, 0, 0);
+   translate = Matrix4::makeTranslate(250, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(300, 0, 0);
+   translate = Matrix4::makeTranslate(350, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(400, 0, 0);
+   translate = Matrix4::makeTranslate(450, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(500, 0, 0);
+   translate = Matrix4::makeTranslate(550, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(600, 0, 0);
+   translate = Matrix4::makeTranslate(650, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(700, 0, 0);
+   translate = Matrix4::makeTranslate(750, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(800, 0, 0);
+   translate = Matrix4::makeTranslate(850, 0, 0);
    translates.push_back(new MatrixTransform(translate));
-   translate = Matrix4::makeTranslate(900, 0, 0);
+   translate = Matrix4::makeTranslate(950, 0, 0);
    translates.push_back(new MatrixTransform(translate));
 
    planets.push_back(new Planet(.50, "Textures/mercurymap.jpg", "Textures/mercurybump_NRM.jpg", 1.59));
@@ -75,7 +75,7 @@ void SolarSystem::setUp()
 void SolarSystem::render()
 {
    glPushMatrix();
-   update();
+   //update();
    GLfloat ptr[16];
    glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
 //   Matrix4 M = Matrix4(ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5], ptr[6], ptr[7], 

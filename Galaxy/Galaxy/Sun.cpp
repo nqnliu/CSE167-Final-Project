@@ -22,7 +22,6 @@ void Sun::render()
       renderGlow();
    glPopMatrix();
 
-
 }
 
 void Sun::glow(float s)
@@ -33,6 +32,10 @@ void Sun::glow(float s)
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
 	glutSolidSphere(.75, 10, 10);
 	glPopMatrix();
+   color[0] = 0;
+   color[1] = 0;
+   color[2] = 0;
+   glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
 }
 
 void Sun::renderGlow()

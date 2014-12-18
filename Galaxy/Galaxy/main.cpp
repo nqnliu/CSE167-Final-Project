@@ -4,7 +4,7 @@
 
 #include "main.h"
 #include "SolarSystem.h"
-
+#include "SpaceShip.h"
 #include <iostream>
 #include <Windows.h>
 #include "GLee.h"
@@ -17,6 +17,7 @@ bool glow_flag = 1;
 SkyBox skybox;
 BezierCurve camera;
 SolarSystem solar;
+SpaceShip spaceShip;
 
 namespace Globals
 {
@@ -45,8 +46,10 @@ void displayCallback()
    GLfloat light_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
    glEnable(GL_LIGHT0);
-
+   glEnable(GL_COLOR_MATERIAL);
+   glEnable(GL_NORMALIZE);
    skybox.render(4000);
+   spaceShip.render();
    solar.render();
    
    /*
@@ -100,7 +103,7 @@ void reshapeCallback(int new_width, int new_height)
    glLoadIdentity();
    gluPerspective(60.0, double(window_width) / (double)window_height, 1.0, 4000.0); // set perspective projection viewing frustum
    gluLookAt(0,0,-400, 0, 0, 0, 0,1,0);
-   //glTranslatef(0, 0, -200);
+   //glTranslatef(0, 0, -400);
    glMatrixMode(GL_MODELVIEW);
 }
 
@@ -121,28 +124,12 @@ void keyboardCallback(unsigned char key, int, int)
    }
    case 'y':
    {
-      //GLfloat ptr[16];
-      //glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
-      //glLoadIdentity();
-      //Matrix4 rotate = Matrix4::makeRotate(rot_angle, Vector3(rotAxis.x, rotAxis.y, rotAxis.z));
-      //camera.C = rotate * camera.C;
-      //camera.rotate(rotate);
-      //glRotatef(-10, 0, 1, 0);
-      //Matrix4 rotate = Matrix4::makeRotateY(-10);
-      //glMultMatrixd(rotate.getPointer());
-
 	   solar.rotateY(-10);
 	   skybox.rotateY(-10);
       break;
    }
    case 'Y':
    {
-      //GLfloat ptr[16];
-      //glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
-      //glLoadIdentity();
-      //glRotatef(10, 0, 1, 0);
-      //glMultMatrixf(ptr);
-
 	   solar.rotateY(10);
 	   skybox.rotateY(10);
       break;
@@ -171,26 +158,26 @@ void keyboardCallback(unsigned char key, int, int)
    }
    case 39: // '
    {
-	   solar.translate(10, 0, 0);
-	   skybox.translate(10, 0, 0);
+	   solar.translate(2, 0, 0);
+	   skybox.translate(2, 0, 0);
 	   break;
    }
    case 59: // ;
    {
-	   solar.translate(-10, 0, 0);
-	   skybox.translate(-10, 0, 0);
+	   solar.translate(-2, 0, 0);
+	   skybox.translate(-2, 0, 0);
 	   break;
    }
    case '[': 
    {
-	   solar.translate(0, -10, 0);
-	   skybox.translate(0, -10, 0);
+	   solar.translate(0, -2, 0);
+	   skybox.translate(0, -2, 0);
 	   break;
    }
    case '/': 
    {
-	   solar.translate(0, 10, 0);
-	   skybox.translate(0, 10, 0);
+	   solar.translate(0, 2, 0);
+	   skybox.translate(0, 2, 0);
 	   break;
    }
    }
@@ -200,22 +187,26 @@ void specialKeysCallback(int key, int x, int y) {
    switch (key) {
    case GLUT_KEY_LEFT:
 	   glMatrixMode(GL_PROJECTION);
-	   glTranslatef(-10, 0, 0);
+	   glTranslatef(-2, 0, 0);
+      spaceShip.translate(2, 0, 0);
 	  glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_RIGHT:
 	   glMatrixMode(GL_PROJECTION);
-	   glTranslatef(10, 0, 0);
+	   glTranslatef(2, 0, 0);
+      spaceShip.translate(-2, 0, 0);
 	   glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_UP:
 	   glMatrixMode(GL_PROJECTION);
-	   glTranslatef(0, 0, -10);
+	   glTranslatef(0, 0, -2);
+      spaceShip.translate(0, 0, 2);
 	   glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_DOWN:
 	   glMatrixMode(GL_PROJECTION);
-	   glTranslatef(0, 0, 10);
+	   glTranslatef(0, 0, 2);
+      spaceShip.translate(0, 0, -2);
 	   glMatrixMode(GL_MODELVIEW);
       break;
    }
@@ -227,20 +218,6 @@ int main(int argc, char** argv) {
    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
    glutInitWindowSize(window_width, window_height);
    glutCreateWindow("Galaxy");
-
-   float specular[] = { 1.0, 1.0, 1.0, 1.0 };
-   float ambient[] = { .5, .5, .5, 1.0 };
-   float position[] = { 10.0, 10.0, 20.0, 1.0 };	// lightsource position
-   float shininess[] = { 100.0 };
-   float diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
-
-   //Generate material properties:
-
-   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
-   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
-   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
-   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
-   glEnable(GL_COLOR_MATERIAL);
 
    glEnable(GL_LIGHTING);
    glutReshapeFunc(reshapeCallback);
