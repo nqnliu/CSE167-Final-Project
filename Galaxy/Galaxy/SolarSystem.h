@@ -21,4 +21,7 @@ public:
    void scale(float);
    void rotateY(float);
    void translate(float, float, float);
+
+private:
+	void ownRotation();
 };

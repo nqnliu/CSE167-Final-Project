@@ -189,14 +189,12 @@ void specialKeysCallback(int key, int x, int y) {
 	   glMatrixMode(GL_PROJECTION);
 	   glTranslatef(-2, 0, 0);
       spaceShip->translate(2, 0, 0);
-	   //glRotatef(4, 0, 1, 0);
 	  glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_RIGHT:
 	   glMatrixMode(GL_PROJECTION);
 	   glTranslatef(2, 0, 0);
       spaceShip->translate(-2, 0, 0);
-	   //glRotatef(-4,0,1,0);
 	   glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_UP:

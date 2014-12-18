@@ -77,6 +77,7 @@ void SolarSystem::render()
    glPushMatrix();
    if (moving)
       update();
+   ownRotation();
    GLfloat ptr[16];
    glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
 //   Matrix4 M = Matrix4(ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5], ptr[6], ptr[7], 
@@ -107,6 +108,14 @@ void SolarSystem::update()
    }
 }
 
+
+void SolarSystem::ownRotation()
+{
+	for (int i = 0; i < 9; i++) {
+		Matrix4 rotate = Matrix4::makeRotate(planets[i]->orbit_velocity * 1.0, Vector3(.3, 1, 0));
+		translates[i]->M = translates[i]->M * rotate;
+	}
+}
 void SolarSystem::scale(float s)
 {
 	Matrix4 scale;
