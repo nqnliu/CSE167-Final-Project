@@ -4,6 +4,8 @@
 #include "SkyBox.h"
 #include "Planet.h"
 #include "BezierCurve.h"
+#include "Object.h"
+#include "ShootingStar.h"
 
 namespace Globals
 {
