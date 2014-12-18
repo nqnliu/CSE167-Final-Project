@@ -6,7 +6,7 @@ const float PI = 3.1415926535898;
 // 3k+1 control points
 BezierCurve::BezierCurve()
 {
-	int k = 3;
+	int k = 5;
 	K = k;
 	c_points = new Vector3[3 * k + 1];
 	l_points = new Vector3[3 * k + 1];
@@ -23,18 +23,28 @@ void BezierCurve::gen_points()
 
 	c_points[1] = Vector3(300, 10, -200);
 	c_points[2] = Vector3(400, -50, -50);
-	
+
 	c_points[3] = Vector3(200, 0, 0);
 
-	c_points[4] = Vector3(100, 50, 50);
-	c_points[5] = Vector3(10, 50, 100);
+	c_points[4] = Vector3(500, 50, 0);
+	c_points[5] = Vector3(500, 50, 0);
 
-	c_points[6] = Vector3(0, 60, 200);
+	c_points[6] = Vector3(500, 50, 0);
 
-	c_points[7] = Vector3(-100, 70, 300);
-	c_points[8] = Vector3(-200, 100, -400);
+	c_points[7] = Vector3(500, 50, 0);
+	c_points[8] = Vector3(500, 50, 0);
 
-	c_points[9] = c_points[0];
+	c_points[9] = Vector3(200, 50, 0);
+
+	c_points[10] = Vector3(100, 50, 50);
+	c_points[11] = Vector3(100, 50, 100);
+
+	c_points[12] = Vector3(0, 60, 200);
+
+	c_points[13] = Vector3(-200, 70, 300);
+	c_points[14] = Vector3(-300, 100, -400);
+
+	c_points[15] = c_points[0];
 
 	/* look at */
 	l_points[0] = Vector3(0, 0, 0);
@@ -44,15 +54,25 @@ void BezierCurve::gen_points()
 
 	l_points[3] = Vector3(500, 0, 0);
 
-	l_points[4] = Vector3(500, 0, 0);
-	l_points[5] = Vector3(000, 0, 0);
+	l_points[4] = Vector3(600, 0, 0);
+	l_points[5] = Vector3(600, 0, 0);
 
-	l_points[6] = Vector3(0, 0, 0);
+	l_points[6] = Vector3(600, 0, 0);
 
-	l_points[7] = Vector3(0, 0, 0);
-	l_points[8] = Vector3(0, 0, 0);
+	l_points[7] = Vector3(600, 0, 0);
+	l_points[8] = Vector3(600, 0, 0);
 
-	l_points[9] = l_points[0];
+	l_points[9] = Vector3(500, 0, 0);
+
+	l_points[10] = Vector3(500, 0, 0);
+	l_points[11] = Vector3(000, 0, 0);
+
+	l_points[12] = Vector3(0, 0, 0);
+
+	l_points[13] = Vector3(0, 0, 0);
+	l_points[14] = Vector3(0, 0, 0);
+
+	l_points[15] = l_points[0];
 
 	printf("finish init\n");
 }
