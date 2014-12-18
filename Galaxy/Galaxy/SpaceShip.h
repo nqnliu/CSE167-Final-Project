@@ -2,6 +2,7 @@
 #define _SPACESHIP_H
 #include "Vector3.h"
 #include "Matrix4.h"
+#include "shader.h"
 #include <vector>
 
 class SpaceShip
@@ -10,6 +11,7 @@ public:
    Matrix4 modelToWorld;
    std::vector<Vector3> positions;
    std::vector<Vector3> normals;
+   Shader * partShader;
 
    SpaceShip::SpaceShip();
    void render();

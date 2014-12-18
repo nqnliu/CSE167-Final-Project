@@ -75,7 +75,8 @@ void SolarSystem::setUp()
 void SolarSystem::render()
 {
    glPushMatrix();
-   //update();
+   if (moving)
+      update();
    GLfloat ptr[16];
    glGetFloatv(GL_MODELVIEW_MATRIX, ptr);
 //   Matrix4 M = Matrix4(ptr[0], ptr[1], ptr[2], ptr[3], ptr[4], ptr[5], ptr[6], ptr[7], 

@@ -10,6 +10,7 @@ public:
    vector<MatrixTransform*> translates;
    vector<MatrixTransform*> orbits;
    Matrix4 model2world;
+   bool moving = false;
 
    SolarSystem::SolarSystem();
    void render();
