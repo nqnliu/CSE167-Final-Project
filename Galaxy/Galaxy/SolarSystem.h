@@ -9,6 +9,7 @@ public:
    vector<Planet*> planets;
    vector<MatrixTransform*> translates;
    vector<MatrixTransform*> orbits;
+   MatrixTransform * moonTransform;
    Matrix4 model2world;
    bool moving = false;
 

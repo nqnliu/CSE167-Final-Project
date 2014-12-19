@@ -5,7 +5,7 @@
 #include "BasicParticleGenerators.hpp"
 #include "ParticleUpdaters.hpp"
 #include "glParticleRenderer.hpp"
-ParticleSystem * m_system = new ParticleSystem(size_t(10000));
+ParticleSystem * m_system = new ParticleSystem(size_t(500));
 GLParticleRenderer * renderP = new GLParticleRenderer();
 Sun::Sun() : Planet(109, "Textures/sunmap.jpg", "Textures/smooth.jpg", 0.0)
 {
@@ -22,7 +22,7 @@ Sun::Sun() : Planet(109, "Textures/sunmap.jpg", "Textures/smooth.jpg", 0.0)
 
    auto particleEmitter = std::make_shared<ParticleEmitter>();
    {
-      particleEmitter->m_emitRate = (float)10000 * 0.45f;
+      particleEmitter->m_emitRate = (float)500 * 0.45f;
 
       // pos:
       auto posGenerator = std::make_shared<generators::RoundPosGen>();
@@ -34,8 +34,8 @@ Sun::Sun() : Planet(109, "Textures/sunmap.jpg", "Textures/smooth.jpg", 0.0)
       particleEmitter->addGenerator(posGenerator);
 
       auto colGenerator = std::make_shared<generators::BasicColorGen>();
-      colGenerator->m_minStartCol = glm::vec4{ 1, 1.0, 1.0, 1.0 };
-      colGenerator->m_maxStartCol = glm::vec4{ 1, 1.0, 1.0, 1.0 };
+      colGenerator->m_minStartCol = glm::vec4{ 1, 0.647059, 0, 1.0 };
+      colGenerator->m_maxStartCol = glm::vec4{ 1, 0.54902, 0, 1.0 };
       colGenerator->m_minEndCol = glm::vec4{ 1, 1.0, 1.0, 0.0 };
       colGenerator->m_maxEndCol = glm::vec4{ 1, 1.0, 1.0, 0.0 };
       particleEmitter->addGenerator(colGenerator);

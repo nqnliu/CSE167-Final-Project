@@ -70,7 +70,7 @@ void displayCallback()
 
 void idleCallback()
 {
-	camera.move(.005);
+	camera.move(.001);
 	displayCallback();         // call display routine to show the cube
 }
 
@@ -204,14 +204,14 @@ void specialKeysCallback(int key, int x, int y) {
       break;
    case GLUT_KEY_UP:
 	   glMatrixMode(GL_PROJECTION);
-	   glTranslatef(0, 0, -2);
-      spaceShip->translate(0, 0, 2);
+	   glTranslatef(0, 0, -5);
+      spaceShip->translate(0, 0, 5);
 	   glMatrixMode(GL_MODELVIEW);
       break;
    case GLUT_KEY_DOWN:
 	   glMatrixMode(GL_PROJECTION);
-	   glTranslatef(0, 0, 2);
-      spaceShip->translate(0, 0, -2);
+	   glTranslatef(0, 0, 5);
+      spaceShip->translate(0, 0, -5);
 	   glMatrixMode(GL_MODELVIEW);
       break;
    }

@@ -2,6 +2,7 @@
 #include "Planet.h"
 #include "Sun.h"
 #include "Earth.h"
+#include "Group.h"
 #include "Matrix4.h"
 
 SolarSystem::SolarSystem()
@@ -46,15 +47,14 @@ SolarSystem::SolarSystem()
    planets.push_back(new Planet(.50, "Textures/mercurymap.jpg", "Textures/mercurybump_NRM.jpg", 1.59));
    planets.push_back(new Planet(1.0, "Textures/venusmap.jpg", "Textures/venusbump_NRM.jpg", 1.18));
    planets.push_back(new Earth(1.0, "Textures/earthmap1k.jpg", "Textures/earthbump1k_NRM.jpg", 1));
-   planets[2]->setGlow(.21, .1, .03);
    planets.push_back(new Planet(.75, "Textures/mars_1k_color.jpg", "Textures/marsbump1k_NRM.jpg", .0343));
-   planets[3]->setGlow(.025, .05, .25);
    planets.push_back(new Planet(11.21, "Textures/jupitermap.jpg", "Textures/smooth.jpg", .808));
    planets.push_back(new Planet(9.45, "Textures/saturnmap.jpg", "Textures/smooth.jpg", .439));
    planets.push_back(new Planet(4.0, "Textures/uranusmap.jpg", "Textures/smooth.jpg", .228));
    planets.push_back(new Planet(3.8, "Textures/neptunemap.jpg", "Textures/smooth.jpg", .182));
    planets.push_back(new Planet(.20, "Textures/plutomap2k.jpg", "Textures/plutobump2k_NRM.jpg", .157));
-
+   
+   
    for (int i = 0; i < 9; i++)
    {
       orbits[i]->addChild(translates[i]);
@@ -62,14 +62,20 @@ SolarSystem::SolarSystem()
       world.addChild(orbits[i]);
    }  
 
+
    Sun * sun = new Sun();
    planets.push_back(sun);
+   planets.push_back(new Planet(.27, "Textures/moonmap4k.jpg", "Textures/moonbump4k_NRM.jpg", .5));
+   translate = Matrix4::makeTranslate(1.5, 0, 0);
+   moonTransform = new MatrixTransform(translate);
+   moonTransform->addChild(planets[10]);
+   translates[2]->addChild(moonTransform); 
    world.addChild(sun);
 }
 
 void SolarSystem::setUp()
 {
-   for (int i = 0; i < 10; i++)
+   for (int i = 0; i < 11; i++)
       planets[i]->setUpShader();
 }
 
@@ -107,6 +113,8 @@ void SolarSystem::update()
       Matrix4 rotate = Matrix4::makeRotateY(planets[i]->orbit_velocity * .1);
       orbits[i]->M = rotate * orbits[i]->M;
    }
+   Matrix4 rotate = Matrix4::makeRotateY(planets[10]->orbit_velocity * 1.0);
+   moonTransform->M = moonTransform->M * rotate;
 }
 
 
@@ -116,6 +124,8 @@ void SolarSystem::ownRotation()
 		Matrix4 rotate = Matrix4::makeRotate(planets[i]->orbit_velocity * 1.0, Vector3(.3, 1, 0));
 		translates[i]->M = translates[i]->M * rotate;
 	}
+   Matrix4 rotate = Matrix4::makeRotate(planets[10]->orbit_velocity * 1.0, Vector3(.3, 1, 0));
+   moonTransform->M = moonTransform->M * rotate;
 }
 void SolarSystem::scale(float s)
 {
